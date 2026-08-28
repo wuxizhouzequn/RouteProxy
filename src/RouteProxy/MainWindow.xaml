@@ -1,0 +1,184 @@
+<Window x:Class="RouteProxy.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RouteProxy 1.4.2 - 静态 IP 分流" Icon="Assets/RouteProxy.ico" Height="900" Width="1040"
+        MinHeight="700" MinWidth="900" WindowStartupLocation="CenterScreen"
+        Background="#F5F7FA" Closing="Window_Closing">
+    <Window.Resources>
+        <Style TargetType="TextBox">
+            <Setter Property="Padding" Value="9,7"/>
+            <Setter Property="BorderBrush" Value="#D7DCE5"/>
+            <Setter Property="BorderThickness" Value="1"/>
+        </Style>
+        <Style TargetType="PasswordBox">
+            <Setter Property="Padding" Value="9,7"/>
+            <Setter Property="BorderBrush" Value="#D7DCE5"/>
+        </Style>
+        <Style TargetType="ComboBox"><Setter Property="Padding" Value="8,6"/></Style>
+        <Style TargetType="Button">
+            <Setter Property="Padding" Value="18,9"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Grid.Row="0" Margin="0,0,0,16">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <StackPanel>
+                <TextBlock Text="RouteProxy" FontSize="28" FontWeight="SemiBold" Foreground="#172033"/>
+                <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
+                    <Ellipse x:Name="StatusDot" Width="10" Height="10" Fill="#9AA3B2" Margin="0,0,8,0"/>
+                    <TextBlock x:Name="StatusText" Text="已关闭" Foreground="#596273"/>
+                    <TextBlock Text="  ·  请先启动你的第三方 VPN" Foreground="#8A93A3"/>
+                </StackPanel>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                <Button x:Name="StartButton" Content="开启分流" Click="StartButton_Click"
+                        Background="#1769E0" Foreground="White" BorderThickness="0" Margin="0,0,10,0"/>
+                <Button x:Name="StopButton" Content="关闭并恢复" Click="StopButton_Click" IsEnabled="False"
+                        Background="White" BorderBrush="#CBD2DE"/>
+            </StackPanel>
+        </Grid>
+
+        <Border Grid.Row="1" Background="White" CornerRadius="10" Padding="20" Margin="0,0,0,16">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <TextBlock Text="上游 VPN" FontSize="17" FontWeight="SemiBold"/>
+                <Grid Grid.Row="1" Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="320"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,0,12,0">
+                        <TextBlock Text="连接方式" Foreground="#606A7A" Margin="0,0,0,6"/>
+                        <ComboBox x:Name="UpstreamModeBox" SelectionChanged="UpstreamModeBox_SelectionChanged">
+                            <ComboBoxItem Content="自动检测（推荐）" Tag="auto"/>
+                            <ComboBoxItem Content="Windows 系统代理" Tag="system"/>
+                            <ComboBoxItem Content="VPN 虚拟网卡" Tag="adapter"/>
+                            <ComboBoxItem Content="手动本地 HTTP" Tag="manual-http"/>
+                            <ComboBoxItem Content="手动本地 SOCKS5" Tag="manual-socks"/>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1">
+                        <TextBlock Text="手动地址（仅手动模式）" Foreground="#606A7A" Margin="0,0,0,6"/>
+                        <TextBox x:Name="UpstreamAddressBox" ToolTip="例如 127.0.0.1:7897"/>
+                    </StackPanel>
+                </Grid>
+                <Border Grid.Row="2" Height="1" Background="#E7EAF0" Margin="0,16,0,16"/>
+                <TextBlock Grid.Row="3" Text="静态代理" FontSize="17" FontWeight="SemiBold"/>
+                <Grid Grid.Row="4" Margin="0,14,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="105"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Margin="0,0,12,0">
+                        <TextBlock Text="类型" Foreground="#606A7A" Margin="0,0,0,6"/>
+                        <ComboBox x:Name="ProxyTypeBox" SelectedIndex="0">
+                            <ComboBoxItem Content="SOCKS5" Tag="socks"/>
+                            <ComboBoxItem Content="HTTP" Tag="http"/>
+                        </ComboBox>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1" Margin="0,0,12,0">
+                        <TextBlock Text="服务器 IP / 域名" Foreground="#606A7A" Margin="0,0,0,6"/>
+                        <TextBox x:Name="ServerBox"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Margin="0,0,12,0">
+                        <TextBlock Text="端口" Foreground="#606A7A" Margin="0,0,0,6"/>
+                        <TextBox x:Name="PortBox" Text="443"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="3">
+                        <TextBlock Text="用户名" Foreground="#606A7A" Margin="0,0,0,6"/>
+                        <TextBox x:Name="UsernameBox"/>
+                    </StackPanel>
+                </Grid>
+                <Grid Grid.Row="5" Margin="0,12,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="125"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="密码" Foreground="#606A7A" VerticalAlignment="Center"/>
+                    <PasswordBox x:Name="PasswordBox" Grid.Column="1"/>
+                </Grid>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*"/>
+                <ColumnDefinition Width="14"/>
+                <ColumnDefinition Width="3*"/>
+            </Grid.ColumnDefinitions>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="14"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <Border Background="White" CornerRadius="10" Padding="20">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="*"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Text="走静态 IP 的域名" FontSize="17" FontWeight="SemiBold"/>
+                        <TextBox x:Name="DomainsBox" Grid.Row="1" Margin="0,12,0,8"
+                                 AcceptsReturn="True" VerticalScrollBarVisibility="Auto"
+                                 TextWrapping="NoWrap" FontFamily="Consolas"/>
+                        <TextBlock Grid.Row="2" Text="每行一个域名；自动包含其子域名。其他网站只走当前 VPN。"
+                                   Foreground="#788293" TextWrapping="Wrap"/>
+                    </Grid>
+                </Border>
+                <Border Grid.Row="2" Background="White" CornerRadius="10" Padding="20">
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel>
+                            <TextBlock Text="当前出口 IP" FontWeight="SemiBold"/>
+                            <TextBlock Text="普通流量（仅当前 VPN）" Foreground="#788293" Margin="0,10,0,2"/>
+                            <TextBlock x:Name="NormalIpText" Text="未检测" FontSize="16"/>
+                            <TextBlock Text="静态分流（VPN → 静态代理）" Foreground="#788293" Margin="0,10,0,2"/>
+                            <TextBlock x:Name="StaticIpText" Text="开启后检测" FontSize="16"/>
+                        </StackPanel>
+                        <Button x:Name="RefreshIpButton" Grid.Column="1" Content="刷新" Click="RefreshIpButton_Click"
+                                VerticalAlignment="Top" Background="White" BorderBrush="#CBD2DE"/>
+                    </Grid>
+                </Border>
+            </Grid>
+
+            <Border Grid.Column="2" Background="#111827" CornerRadius="10" Padding="18">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="运行日志" Foreground="White" FontSize="17" FontWeight="SemiBold"/>
+                    <TextBox x:Name="LogBox" Grid.Row="1" Margin="0,12,0,0" IsReadOnly="True"
+                             Background="#111827" Foreground="#CFD7E6" BorderThickness="0"
+                             FontFamily="Consolas" FontSize="12" TextWrapping="Wrap"
+                             AcceptsReturn="True" VerticalScrollBarVisibility="Auto"/>
+                </Grid>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

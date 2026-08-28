@@ -1,0 +1,17 @@
+src/**/bin/
+src/**/obj/
+publish/
+tools/
+tests/*-result.txt
+*.user
+*.suo
+
+# Local state, diagnostics, and secrets
+HANDOFF.md
+.env
+.env.*
+*.local.json
+**/settings.json
+**/system-proxy-backup.json
+**/runtime-*.json
+*.log
