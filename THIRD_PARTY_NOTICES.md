@@ -9,3 +9,4 @@
 - `sing-box.exe` SHA-256: `A4476DD768168A77E249050066BB32774ADDEFCC37DA123978623E7B2819DE28`
 
 The RouteProxy distribution includes the unmodified official sing-box executable.
+The root MIT License applies to RouteProxy's original code only and does not replace or modify the sing-box license.

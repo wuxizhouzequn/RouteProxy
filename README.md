@@ -178,6 +178,10 @@ PAC 覆盖遵循 Windows 系统代理设置的应用，例如 Chrome、Edge、We
 - `AutoConfigURL`、`ProxyEnable`、`ProxyServer` 和 `AutoDetect` 均恢复为启动前状态。
 - 恢复后 VPN 出口不变，网络可用。
 
+## 许可证
+
+RouteProxy 的原创代码使用 [MIT License](LICENSE)。内置的第三方 `sing-box.exe` 不属于 MIT 授权范围，仍遵循 GNU General Public License v3.0 or later；详见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 和 `core/LICENSE`。
+
 ## 如何继续
 
 - 如更换到新的 VPN 客户端，建议先完成一次真实节点切换验收并观察运行日志。
